@@ -6,8 +6,20 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton } from '@mui/material';
 import { Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import * as EmailValidator from 'email-validator';
 
 const Sidebar = () => {
+  const handleCreateChat = () => {
+    //create chat
+    const input = prompt('Enter an email address to chat with');
+    if (!input) {
+      return null;
+    }
+    if (!EmailValidator.validate(input)) {
+      //add chat into db chats collection
+    }
+  };
+
   return (
     <Container>
       <Header>
@@ -25,7 +37,7 @@ const Sidebar = () => {
         <SearchIcon />
         <SearchInput placeholder="Search" />
       </Search>
-      <SidebarButton>Start new chat</SidebarButton>
+      <SidebarButton onClick={handleCreateChat}>Start new chat</SidebarButton>
     </Container>
   );
 };
