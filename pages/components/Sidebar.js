@@ -7,8 +7,13 @@ import { IconButton } from '@mui/material';
 import { Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import * as EmailValidator from 'email-validator';
+import { auth } from '../../firebase';
 
 const Sidebar = () => {
+  const handleSignOut = () => {
+    auth.signOut().catch(alert);
+  };
+
   const handleCreateChat = () => {
     //create chat
     const input = prompt('Enter an email address to chat with');
@@ -38,6 +43,7 @@ const Sidebar = () => {
         <SearchInput placeholder="Search" />
       </Search>
       <SidebarButton onClick={handleCreateChat}>Start new chat</SidebarButton>
+      <LogoutButton onClick={handleSignOut}>Logout</LogoutButton>
     </Container>
   );
 };
@@ -54,13 +60,15 @@ const Search = styled.div`
 `;
 
 const SidebarButton = styled(Button)`
-  width: 100%;
-  color: black;
-  font-weight: bold;
+  && {
+    width: 100%;
+    color: black;
+    font-weight: bold;
 
-  &&& {
-    border-top: 1px solid whitesmoke;
-    border-bottom: 1px solid whitesmoke;
+    &&& {
+      border-top: 1px solid whitesmoke;
+      border-bottom: 1px solid whitesmoke;
+    }
   }
 `;
 
@@ -92,3 +100,16 @@ const UserAvatar = styled(Avatar)`
 `;
 
 const IconsContainer = styled.div``;
+
+const LogoutButton = styled(Button)`
+  && {
+    width: 100%;
+    color: inherit;
+    font-weight: bold;
+
+    &&& {
+      border-top: 1px solid whitesmoke;
+      border-bottom: 1px solid whitesmoke;
+    }
+  }
+`;
