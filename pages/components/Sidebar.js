@@ -7,12 +7,17 @@ import { IconButton } from '@mui/material';
 import { Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import * as EmailValidator from 'email-validator';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import Chat from './Chat.js';
 
 const Sidebar = () => {
-  const handleSignOut = () => {
-    auth.signOut().catch(alert);
-  };
+  const [user] = useAuthState(auth);
+  const chatRef = db
+    .collection('chats')
+    .where('users', 'array-contains', user.email);
+  const [chatsSnapshot] = useCollection(chatRef);
 
   const handleCreateChat = () => {
     //create chat
@@ -20,15 +25,32 @@ const Sidebar = () => {
     if (!input) {
       return null;
     }
-    if (!EmailValidator.validate(input)) {
-      //add chat into db chats collection
+    if (
+      EmailValidator.validate(input) &&
+      !chatAlreadyExists(input) &&
+      input !== user.email
+    ) {
+      db.collection('chats').add({
+        users: [user.email, input]
+      });
     }
   };
 
+  const chatAlreadyExists = (email) =>
+    !!chatsSnapshot?.docs.find(
+      (chat) => chat.data().users.find((user) => user === email)?.length > 0
+    );
+
+  console.log(user.photoURL);
   return (
     <Container>
       <Header>
-        <UserAvatar />
+        <UserAvatar
+          src={user.photoURL}
+          onClick={() => {
+            auth.signOut();
+          }}
+        />
         <IconsContainer>
           <IconButton>
             <ChatIcon />
@@ -43,7 +65,9 @@ const Sidebar = () => {
         <SearchInput placeholder="Search" />
       </Search>
       <SidebarButton onClick={handleCreateChat}>Start new chat</SidebarButton>
-      <LogoutButton onClick={handleSignOut}>Logout</LogoutButton>
+      {chatsSnapshot?.docs.map((chat) => (
+        <Chat key={chat.id} id={chat.id} users={chat.data().users} />
+      ))}
     </Container>
   );
 };
@@ -100,16 +124,3 @@ const UserAvatar = styled(Avatar)`
 `;
 
 const IconsContainer = styled.div``;
-
-const LogoutButton = styled(Button)`
-  && {
-    width: 100%;
-    color: inherit;
-    font-weight: bold;
-
-    &&& {
-      border-top: 1px solid whitesmoke;
-      border-bottom: 1px solid whitesmoke;
-    }
-  }
-`;
