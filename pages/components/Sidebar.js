@@ -11,13 +11,14 @@ import { auth, db } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Chat from './Chat.js';
+import Router from 'next/router';
 
 const Sidebar = () => {
   const [user] = useAuthState(auth);
 
   const chatRef = db
     .collection('chats')
-    .where('users', 'array-contains', user.email);
+    ?.where('users', 'array-contains', user.email);
   const [chatsSnapshot] = useCollection(chatRef);
 
   const handleCreateChat = () => {
@@ -50,6 +51,7 @@ const Sidebar = () => {
           src={user.photoURL}
           onClick={() => {
             auth.signOut();
+            Router.push('/');
           }}
         />
         <IconsContainer>

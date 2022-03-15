@@ -15,7 +15,7 @@ const login = () => {
         <title>Login</title>
       </Head>
       <LoginContainer>
-        <Logo src="/Findmore.png" />
+        <Logo src="/FindmoreConsulting.svg" />
         <Button onClick={handleSignIn} variant="outlined" color="inherit">
           Sign in with Google
         </Button>
@@ -44,6 +44,6 @@ const LoginContainer = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 200px;
+  width: 15em;
   margin-bottom: 50px;
 `;
