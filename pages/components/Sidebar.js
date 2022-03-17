@@ -16,9 +16,12 @@ import Router from 'next/router';
 const Sidebar = () => {
   const [user] = useAuthState(auth);
 
-  const chatRef = db
-    .collection('chats')
-    ?.where('users', 'array-contains', user.email);
+  if (user) {
+    const chatRef = db
+      .collection('chats')
+      ?.where('users', 'array-contains', user.email);
+  }
+
   const [chatsSnapshot] = useCollection(chatRef);
 
   const handleCreateChat = () => {
@@ -43,12 +46,11 @@ const Sidebar = () => {
       (chat) => chat.data().users.find((user) => user === email)?.length > 0
     );
 
-  console.log(user.photoURL);
   return (
     <Container>
       <Header>
         <UserAvatar
-          src={user.photoURL}
+          src={user?.photoURL}
           onClick={() => {
             auth.signOut();
             Router.push('/');
@@ -56,7 +58,7 @@ const Sidebar = () => {
         />
         <IconsContainer>
           <IconButton>
-            <ChatIcon />
+            <ChatIcon onClick={handleCreateChat} />
           </IconButton>
           <IconButton>
             <MoreVertIcon />

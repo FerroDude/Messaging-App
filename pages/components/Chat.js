@@ -5,7 +5,7 @@ import getRecipientEmail from '../../utils/getRecipientEmail';
 import { auth, db } from '../../firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { useRouter } from 'next/router';
+import { Router, useRouter } from 'next/router';
 
 const Chat = ({ id, users }) => {
   const router = useRouter();
@@ -28,7 +28,6 @@ const Chat = ({ id, users }) => {
       ) : (
         <UserAvatar>{recipientEmail[0]}</UserAvatar>
       )}
-
       <p>{recipientEmail}</p>
     </Container>
   );

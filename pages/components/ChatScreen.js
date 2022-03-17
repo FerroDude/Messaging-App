@@ -14,6 +14,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import firebase from 'firebase/compat/app';
 import getRecipientEmail from '../../utils/getRecipientEmail';
 import Timeago from 'timeago-react';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 
 const ChatScreen = ({ chat, messages }) => {
   const [user] = useAuthState(auth);
@@ -62,6 +63,18 @@ const ChatScreen = ({ chat, messages }) => {
         );
       });
     }
+  };
+
+  const handleDeleteChat = () => {
+    db.collection('chats')
+      .doc(router.query.id)
+      .delete()
+      .then(() => {
+        router.push('/');
+      })
+      .catch((error) => {
+        console.error('Error removing document: ', error);
+      });
   };
 
   const handleSendMessage = (e) => {
@@ -114,6 +127,9 @@ const ChatScreen = ({ chat, messages }) => {
           </IconButton>
           <IconButton>
             <MoreVertIcon />
+          </IconButton>
+          <IconButton>
+            <DeleteForeverIcon onClick={handleDeleteChat}></DeleteForeverIcon>
           </IconButton>
         </HeaderIcons>
       </Header>
