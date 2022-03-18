@@ -46,16 +46,15 @@ const Sidebar = () => {
       (chat) => chat.data().users.find((user) => user === email)?.length > 0
     );
 
+  const handleSignOut = async () => {
+    await auth.signOut();
+    Router.push('/');
+  };
+
   return (
     <Container>
       <Header>
-        <UserAvatar
-          src={user?.photoURL}
-          onClick={() => {
-            auth.signOut();
-            Router.push('/');
-          }}
-        />
+        <UserAvatar src={user?.photoURL} onClick={handleSignOut} />
         <IconsContainer>
           <IconButton>
             <ChatIcon onClick={handleCreateChat} />
